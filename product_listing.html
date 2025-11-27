@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Megzo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="product_listing.css">
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="glass-header fixed w-full top-0 z-40 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <!-- Mobile Sidebar Toggle -->
+                <button id="sidebarToggle" class="lg:hidden text-gray-800 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <a href="homepage.html" class="text-2xl font-bold text-gray-800">Megzo</a>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <nav class="flex items-center gap-4">
+                    <div class="relative cursor-pointer" onclick="window.location.href='mycart.html'">
+                        <span class="text-gray-800 font-medium" href="mycart.html">Cart</span>
+                        <span id="cart-count" class="hidden absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </div>
+                    
+                    <button id="loginBtn" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded transition hidden md:block">
+                        Login
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-24 min-h-screen container mx-auto px-4 relative">
+        
+        <!-- Sidebar / Filter Panel -->
+        <!-- Hidden on mobile by default, fixed on desktop -->
+        <aside id="filterSidebar" class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full lg:translate-x-0 lg:static lg:block transition-transform duration-300 ease-in-out glass-sidebar h-full overflow-y-auto lg:h-auto lg:overflow-visible lg:bg-transparent lg:shadow-none p-6 lg:p-0 lg:mr-8 rounded-xl">
+            
+            <div class="flex justify-between items-center lg:hidden mb-6">
+                <h2 class="text-xl font-bold text-gray-900">Filters</h2>
+                <button id="closeSidebar" class="text-gray-600 hover:text-red-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Sort Option -->
+            <div class="mb-8">
+                <h3 class="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2">Sort By</h3>
+                <select id="sortSelect" class="w-full bg-white/50 border border-gray-300 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
+                    <option value="default">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+
+            <!-- Categories -->
+            <div class="mb-8">
+                <h3 class="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2">Categories</h3>
+                <div id="category-filters" class="flex flex-col gap-2">
+                    <!-- Checkboxes injected by JS -->
+                </div>
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-6">
+                <h3 class="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2">Price Range</h3>
+                <input type="range" id="priceRange" min="0" max="100000" step="500" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                <div class="flex justify-between text-sm font-medium mt-2">
+                    <span>₹0</span>
+                    <span id="priceValue">₹100000</span>
+                </div>
+            </div>
+
+            <!-- Apply/Reset Buttons (Mobile mainly) -->
+            <button id="resetFilters" class="w-full py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded font-semibold transition">
+                Reset Filters
+            </button>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden glass-overlay"></div>
+
+        <!-- Main Product Grid -->
+        <main class="flex-1 pb-10">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-md">Our Products</h1>
+                <span id="result-count" class="text-white font-medium text-sm bg-black/20 px-3 py-1 rounded-full">Showing all items</span>
+            </div>
+            
+            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+                <!-- JS will inject products here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Profile Modal (Same as before) -->
+    <div id="profileModal" class="profile-modal fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-[60]">
+        <div class="bg-white rounded-2xl p-8 w-96 glass-card relative">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">My Profile</h2>
+                <span class="profile-close text-2xl cursor-pointer">&times;</span>
+            </div>
+            <form id="profileForm" class="flex flex-col gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Address</label>
+                    <textarea id="profileAddress" class="w-full border rounded p-2" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Contact Number</label>
+                    <input type="tel" id="profileContact" class="w-full border rounded p-2">
+                </div>
+                <button type="submit" class="btn-custom w-full mt-2">Save Profile</button>
+            </form>
+            <div id="profileMessage" class="mt-4 text-center text-sm"></div>
+        </div>
+    </div>
+
+    <script src="product_listing.js"></script>
+</body>
+</html>

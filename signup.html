@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Megzo | Register</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ff6b6b 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      max-width: 450px;
+      width: 100%;
+      padding: 50px 40px;
+    }
+
+    .signup-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .signup-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .signup-header p {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      background: #f7fafc;
+      padding: 6px;
+      border-radius: 12px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 500;
+      color: #718096;
+      transition: all 0.3s;
+    }
+
+    .role-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2d3748;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .terms-check {
+      font-size: 12px;
+      color: #718096;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .terms-check input[type="checkbox"] {
+      margin-top: 3px;
+    }
+
+    .terms-check a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .terms-check a:hover {
+      text-decoration: underline;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .login-link {
+      margin-top: 30px;
+      text-align: center;
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #667eea;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 40px 30px;
+      }
+
+      .signup-header h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="signup-header">
+      <h1>Create Account</h1>
+      <p>Sign up to get started with Megzo</p>
+    </div>
+
+    <!-- Role Selector -->
+    <div class="role-selector">
+      <div class="role-btn active" id="customerBtn" onclick="selectRole('customer')">
+        <h3>Customer</h3>
+      </div>
+      <div class="role-btn" id="sellerBtn" onclick="selectRole('seller')">
+        <h3>Seller</h3>
+      </div>
+    </div>
+
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="input-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" required placeholder="Enter your full name" />
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required placeholder="Enter your email" />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="Create a password" />
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required placeholder="Confirm your password" />
+      </div>
+
+      <label class="terms-check">
+        <input type="checkbox" required />
+        <span>I agree to Megzo's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.</span>
+      </label>
+
+      <button type="submit" class="signup-btn">Create Account</button>
+
+      <div class="login-link">
+        Already have an account? <a href="login.html">Log in</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let selectedRole = 'customer';
+
+    function selectRole(role) {
+      selectedRole = role;
+      const customerBtn = document.getElementById('customerBtn');
+      const sellerBtn = document.getElementById('sellerBtn');
+
+      if (role === 'customer') {
+        customerBtn.classList.add('active');
+        sellerBtn.classList.remove('active');
+      } else {
+        sellerBtn.classList.add('active');
+        customerBtn.classList.remove('active');
+      }
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+
+      const fullname = document.getElementById('fullname').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      const dbRole = selectedRole === 'customer' ? 'customer' : 'seller';
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullname, email, password, role: dbRole })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("Registration successful! Redirecting to login...");
+          window.location.href = 'login.html';
+        } else {
+          alert("Error: " + data.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("Failed to connect to server.");
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megzo | Products</title>
+    <link rel="stylesheet" href="homepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Specific styles for Product Listing */
+        .main-container {
+            max-width: 1248px;
+            margin: 10px auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            width: 270px;
+            background: #fff;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+            padding: 15px;
+            align-self: flex-start;
+        }
+
+        .filter-header {
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-section {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #212121;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #212121;
+            cursor: pointer;
+        }
+
+        .filter-item input {
+            margin-right: 10px;
+        }
+
+        /* Product Grid Area */
+        .content-area {
+            flex: 1;
+            background: #fff;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+            padding: 15px;
+        }
+
+        .sort-bar {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .sort-bar span {
+            font-weight: 500;
+            margin-right: 15px;
+        }
+
+        .sort-option {
+            margin-right: 20px;
+            cursor: pointer;
+            color: #212121;
+        }
+
+        .sort-option.active {
+            color: #2874f0;
+            font-weight: 500;
+            border-bottom: 2px solid #2874f0;
+        }
+
+        /* Reuse product-grid from homepage.css but adjust for listing */
+        .listing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            /* Slightly larger cards */
+            gap: 0;
+            /* Flipkart style often has borders between items */
+            border-top: 1px solid #f0f0f0;
+            border-left: 1px solid #f0f0f0;
+        }
+
+        .listing-card {
+            padding: 20px;
+            border-right: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .listing-card:hover {
+            box-shadow: 0 3px 16px 0 rgba(0, 0, 0, .11);
+            z-index: 1;
+        }
+
+        .listing-img-container {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .listing-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .listing-title {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .listing-rating {
+            background-color: #388e3c;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 4px 2px 6px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 10px;
+        }
+
+        .listing-price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .listing-price {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .listing-original {
+            color: #878787;
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+
+        .listing-discount {
+            color: #388e3c;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                display: none;
+                /* Hide filters on mobile for now */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Reuse Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="homepage.html">
+                    <div class="logo-text">Megzo</div>
+
+                </a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products, brands and more">
+                <button class="search-btn">
+                    <svg width="20" height="20" viewBox="0 0 17 18" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="#2874F1" fill-rule="evenodd">
+                            <path class="_34RNph"
+                                d="m11.618 9.897l4.225 4.212c.092.092.101.232.02.313l-1.465 1.46c-.081.081-.221.072-.314-.02l-4.216-4.203">
+                            </path>
+                            <path class="_34RNph"
+                                d="m6.486 10.901c-2.42 0-4.381-1.956-4.381-4.368 0-2.413 1.961-4.369 4.381-4.369 2.42 0 4.381 1.956 4.381 4.369 0 2.413-1.961 4.368-4.381 4.368m0-10.835c-3.582 0-6.486 2.895-6.486 6.467 0 3.572 2.904 6.467 6.486 6.467 3.582 0 6.486-2.895 6.486-6.467 0-3.572-2.904-6.467-6.486-6.467">
+                            </path>
+                        </g>
+                    </svg>
+                </button>
+            </div>
+            <div class="header-nav">
+                <button class="login-btn-header" onclick="window.location.href='login.html'">Login</button>
+                <div class="nav-link">Become a Seller</div>
+                <div class="nav-link">More</div>
+                <div class="nav-link cart-icon" onclick="window.location.href='mycart.html'">
+                    <span>Cart</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="filter-header">Filters</div>
+
+            <div class="filter-section">
+                <div class="filter-title">Price</div>
+                <div class="filter-item"><input type="checkbox"> Under ₹1,000</div>
+                <div class="filter-item"><input type="checkbox"> ₹1,000 - ₹5,000</div>
+                <div class="filter-item"><input type="checkbox"> ₹5,000 - ₹10,000</div>
+                <div class="filter-item"><input type="checkbox"> Over ₹10,000</div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Customer Ratings</div>
+                <div class="filter-item"><input type="checkbox"> 4★ & above</div>
+                <div class="filter-item"><input type="checkbox"> 3★ & above</div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-area">
+            <div class="sort-bar">
+                <span>Sort By</span>
+                <div class="sort-option active">Popularity</div>
+                <div class="sort-option">Price -- Low to High</div>
+                <div class="sort-option">Price -- High to Low</div>
+                <div class="sort-option">Newest First</div>
+            </div>
+
+            <div class="listing-grid" id="products-container">
+                <!-- Products injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Popup Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <h2>My Profile</h2>
+                <span class="profile-close">&times;</span>
+            </div>
+            <form id="profileForm" class="profile-form">
+                <div class="form-group">
+                    <label for="profileAddress">Address</label>
+                    <textarea id="profileAddress" placeholder="Enter your full address" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="profileContact">Contact Number</label>
+                    <input type="tel" id="profileContact" placeholder="Enter your contact number">
+                </div>
+                <button type="submit" class="profile-save-btn">Save Profile</button>
+            </form>
+            <div id="profileMessage" class="profile-message"></div>
+        </div>
+    </div>
+
+    <!-- Reuse Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>ABOUT</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>HELP</h3>
+                <ul>
+                    <li><a href="#">Payments</a></li>
+                    <li><a href="#">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>POLICY</h3>
+                <ul>
+                    <li><a href="#">Return Policy</a></li>
+                    <li><a href="#">Terms Of Use</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>SOCIAL</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    .listing-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+                    /* Slightly larger cards */
+                    gap: 0;
+                    /* Flipkart style often has borders between items */
+                    border-top: 1px solid #f0f0f0;
+                    border-left: 1px solid #f0f0f0;
+                    }
+
+                    .listing-card {
+                    padding: 20px;
+                    border-right: 1px solid #f0f0f0;
+                    border-bottom: 1px solid #f0f0f0;
+                    cursor: pointer;
+                    transition: box-shadow 0.2s;
+                    }
+
+                    .listing-card:hover {
+                    box-shadow: 0 3px 16px 0 rgba(0, 0, 0, .11);
+                    z-index: 1;
+                    }
+
+                    .listing-img-container {
+                    height: 200px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 15px;
+                    }
+
+                    .listing-img {
+                    max-height: 100%;
+                    max-width: 100%;
+                    object-fit: contain;
+                    }
+
+                    .listing-title {
+                    font-weight: 500;
+                    font-size: 14px;
+                    margin-bottom: 5px;
+                    }
+
+                    .listing-rating {
+                    background-color: #388e3c;
+                    color: white;
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding: 2px 4px 2px 6px;
+                    border-radius: 3px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 2px;
+                    margin-bottom: 10px;
+                    }
+
+                    .listing-price-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    }
+
+                    .listing-price {
+                    font-size: 18px;
+                    font-weight: 500;
+                    }
+
+                    .listing-original {
+                    color: #878787;
+                    text-decoration: line-through;
+                    font-size: 14px;
+                    }
+
+                    .listing-discount {
+                    color: #388e3c;
+                    font-size: 13px;
+                    font-weight: 500;
+                    }
+
+                    @media (max-width: 768px) {
+                    .main-container {
+                    flex-direction: column;
+                    }
+
+                    .sidebar {
+                    width: 100%;
+                    display: none;
+                    /* Hide filters on mobile for now */
+                    }
+                    }
+                    </style>
+                    </head>
+
+                    <body>
+
+                        <!-- Reuse Header -->
+                        <header>
+                            <div class="header-container">
+                                <div class="logo-container">
+                                    <a href="homepage.html">
+                                        <div class="logo-text">Megzo</div>
+                                        <div class="logo-sub">Explore <span>Plus</span></div>
+                                    </a>
+                                </div>
+                                <div class="search-bar">
+                                    <input type="text" placeholder="Search for products, brands and more">
+                                    <button class="search-btn">
+                                        <svg width="20" height="20" viewBox="0 0 17 18"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g fill="#2874F1" fill-rule="evenodd">
+                                                <path class="_34RNph"
+                                                    d="m11.618 9.897l4.225 4.212c.092.092.101.232.02.313l-1.465 1.46c-.081.081-.221.072-.314-.02l-4.216-4.203">
+                                                </path>
+                                                <path class="_34RNph"
+                                                    d="m6.486 10.901c-2.42 0-4.381-1.956-4.381-4.368 0-2.413 1.961-4.369 4.381-4.369 2.42 0 4.381 1.956 4.381 4.369 0 2.413-1.961 4.368-4.381 4.368m0-10.835c-3.582 0-6.486 2.895-6.486 6.467 0 3.572 2.904 6.467 6.486 6.467 3.582 0 6.486-2.895 6.486-6.467 0-3.572-2.904-6.467-6.486-6.467">
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="header-nav">
+                                    <button class="login-btn-header"
+                                        onclick="window.location.href='login.html'">Login</button>
+                                    <div class="nav-link">Become a Seller</div>
+                                    <div class="nav-link">More</div>
+                                    <div class="nav-link cart-icon" onclick="window.location.href='mycart.html'">
+                                        <span>Cart</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="main-container">
+                            <!-- Sidebar -->
+                            <div class="sidebar">
+                                <div class="filter-header">Filters</div>
+
+                                <div class="filter-section">
+                                    <div class="filter-title">Price</div>
+                                    <div class="filter-item"><input type="checkbox"> Under ₹1,000</div>
+                                    <div class="filter-item"><input type="checkbox"> ₹1,000 - ₹5,000</div>
+                                    <div class="filter-item"><input type="checkbox"> ₹5,000 - ₹10,000</div>
+                                    <div class="filter-item"><input type="checkbox"> Over ₹10,000</div>
+                                </div>
+
+                                <div class="filter-section">
+                                    <div class="filter-title">Customer Ratings</div>
+                                    <div class="filter-item"><input type="checkbox"> 4★ & above</div>
+                                    <div class="filter-item"><input type="checkbox"> 3★ & above</div>
+                                </div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="content-area">
+                                <div class="sort-bar">
+                                    <span>Sort By</span>
+                                    <div class="sort-option active">Popularity</div>
+                                    <div class="sort-option">Price -- Low to High</div>
+                                    <div class="sort-option">Price -- High to Low</div>
+                                    <div class="sort-option">Newest First</div>
+                                </div>
+
+                                <div class="listing-grid" id="products-container">
+                                    <!-- Products injected here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reuse Footer -->
+                        <footer>
+                            <div class="footer-container">
+                                <div class="footer-col">
+                                    <h3>ABOUT</h3>
+                                    <ul>
+                                        <li><a href="#">Contact Us</a></li>
+                                        <li><a href="#">About Us</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-col">
+                                    <h3>HELP</h3>
+                                    <ul>
+                                        <li><a href="#">Payments</a></li>
+                                        <li><a href="#">Shipping</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-col">
+                                    <h3>POLICY</h3>
+                                    <ul>
+                                        <li><a href="#">Return Policy</a></li>
+                                        <li><a href="#">Terms Of Use</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-col">
+                                    <h3>SOCIAL</h3>
+                                    <ul>
+                                        <li><a href="#">Facebook</a></li>
+                                        <li><a href="#">Twitter</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </footer>
+
+                        <script>
+                            // Profile functionality
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const user = JSON.parse(localStorage.getItem('user'));
+                                const loginBtn = document.querySelector('.login-btn-header');
+
+                                if (user) {
+                                    // Replace with profile icon only
+                                    loginBtn.innerHTML = `
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor"/>
+                                            <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="currentColor"/>
+                                        </svg>
+                                    `;
+                                    loginBtn.style.backgroundColor = 'transparent';
+                                    loginBtn.style.color = '#2d3748';
+                                    loginBtn.style.border = 'none';
+                                    loginBtn.style.padding = '5px';
+                                    loginBtn.style.cursor = 'pointer';
+                                    loginBtn.onclick = () => openProfileModal();
+                                }
+                            });
+
+                            function openProfileModal() {
+                                const modal = document.getElementById('profileModal');
+                                const user = JSON.parse(localStorage.getItem('user'));
+
+                                document.getElementById('profileAddress').value = user.address || '';
+                                document.getElementById('profileContact').value = user.contact_number || '';
+
+                                modal.style.display = 'flex';
+                            }
+
+                            document.querySelector('.profile-close').addEventListener('click', () => {
+                                document.getElementById('profileModal').style.display = 'none';
+                            });
+
+                            window.addEventListener('click', (event) => {
+                                const modal = document.getElementById('profileModal');
+                                if (event.target === modal) {
+                                    modal.style.display = 'none';
+                                }
+                            });
+
+                            document.getElementById('profileForm').addEventListener('submit', async (e) => {
+                                e.preventDefault();
+
+                                const user = JSON.parse(localStorage.getItem('user'));
+                                const address = document.getElementById('profileAddress').value.trim();
+                                const contact_number = document.getElementById('profileContact').value.trim();
+                                const messageDiv = document.getElementById('profileMessage');
+
+                                if (!address && !contact_number) {
+                                    messageDiv.textContent = 'Please fill at least one field';
+                                    messageDiv.className = 'profile-message error';
+                                    return;
+                                }
+
+                                try {
+                                    const response = await fetch(`http://localhost:3000/api/users/${user.id}/profile`, {
+                                        method: 'PUT',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ address, contact_number })
+                                    });
+
+                                    const data = await response.json();
+
+                                    if (response.ok) {
+                                        const updatedUser = {
+                                            ...user,
+                                            address: data.user.address,
+                                            contact_number: data.user.contact_number
+                                        };
+                                        localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                                        messageDiv.textContent = 'Profile updated successfully!';
+                                        messageDiv.className = 'profile-message success';
+
+                                        setTimeout(() => {
+                                            document.getElementById('profileModal').style.display = 'none';
+                                            messageDiv.textContent = '';
+                                        }, 1500);
+                                    } else {
+                                        messageDiv.textContent = data.message || 'Failed to update profile';
+                                        messageDiv.className = 'profile-message error';
+                                    }
+                                } catch (error) {
+                                    console.error('Error updating profile:', error);
+                                    if (user) {
+                                        // Update to show Profile Name with an icon
+                                        loginBtn.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="white"/>
+                            <path d="M12.0002 14.5C6.99016 14.5 2.91016 17.86 2.91016 22C2.91016 22.28 3.13016 22.5 3.41016 22.5H20.5902C20.8702 22.5 21.0902 22.28 21.0902 22C21.0902 17.86 17.0102 14.5 12.0002 14.5Z" fill="white"/>
+                        </svg>
+                        <span>${user.name}</span>
+                    </div>
+                `;
+                                        loginBtn.style.backgroundColor = 'transparent';
+                                        loginBtn.style.color = '#fff';
+                                        loginBtn.style.border = 'none';
+                                        loginBtn.style.padding = '0';
+                                        loginBtn.onclick = null; // Remove default redirect
+                                    }
+
+                                    // Add event listeners to filters
+                                    const checkboxes = document.querySelectorAll('.filter-item input[type="checkbox"]');
+                                    checkboxes.forEach(cb => {
+                                        cb.addEventListener('change', applyFilters);
+                                    });
+
+                                    fetchProducts();
+                                });
+
+                            async function fetchProducts() {
+                                try {
+                                    // Get category_id from URL if present
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const categoryId = urlParams.get('category_id');
+
+                                    let url = 'http://localhost:3000/api/products';
+                                    if (categoryId) {
+                                        url += `?category_id=${categoryId}`;
+                                    }
+
+                                    const response = await fetch(url);
+                                    allProducts = await response.json(); // Store in global variable
+                                    renderProducts(allProducts);
+                                } catch (error) {
+                                    console.error('Error fetching products:', error);
+                                }
+                            }
+
+                            function applyFilters() {
+                                let filtered = [...allProducts];
+
+                                // 1. Price Filter
+                                const priceCheckboxes = document.querySelectorAll('.filter-section:nth-child(2) .filter-item input:checked');
+                                if (priceCheckboxes.length > 0) {
+                                    filtered = filtered.filter(product => {
+                                        return Array.from(priceCheckboxes).some(cb => {
+                                            const label = cb.parentElement.textContent.trim();
+                                            if (label.includes('Under')) return product.price < 1000;
+                                            if (label.includes('1,000 - ₹5,000')) return product.price >= 1000 && product.price <= 5000;
+                                            if (label.includes('5,000 - ₹10,000')) return product.price >= 5000 && product.price <= 10000;
+                                            if (label.includes('Over')) return product.price > 10000;
+                                            return false;
+                                        });
+                                    });
+                                }
+
+                                // 2. Rating Filter
+                                const ratingCheckboxes = document.querySelectorAll('.filter-section:nth-child(3) .filter-item input:checked');
+                                if (ratingCheckboxes.length > 0) {
+                                    filtered = filtered.filter(product => {
+                                        return Array.from(ratingCheckboxes).some(cb => {
+                                            const label = cb.parentElement.textContent.trim();
+                                            if (label.includes('4★')) return product.rating >= 4;
+                                            if (label.includes('3★')) return product.rating >= 3;
+                                            return false;
+                                        });
+                                    });
+                                }
+
+                                renderProducts(filtered);
+                            }
+
+                            function renderProducts(products) {
+                                const container = document.getElementById('products-container');
+                                container.innerHTML = '';
+
+                                if (products.length === 0) {
+                                    container.innerHTML = '<div style="padding:20px;">No products found matching your filters.</div>';
+                                    return;
+                                }
+
+                                products.forEach(product => {
+                                    const card = document.createElement('div');
+                                    card.className = 'listing-card';
+
+                                    const discount = product.discount_percentage || Math.round(((product.original_price - product.price) / product.original_price) * 100);
+
+                                    card.innerHTML = `
+                                <div class="listing-img-container">
+                                    <img src="${product.image_url}" alt="${product.title}" class="listing-img">
+                                </div>
+                                <div class="listing-title">${product.title}</div>
+                                <div class="listing-rating">
+                                    ${product.rating} ★
+                                </div>
+                                <div class="listing-price-row">
+                                    <div class="listing-price">₹${product.price}</div>
+                                    <div class="listing-original">₹${product.original_price}</div>
+                                    <div class="listing-discount">${discount}% off</div>
+                                </div>
+                `;
+
+                                    // Add Add to Cart Button
+                                    const btn = document.createElement('button');
+                                    btn.textContent = 'Add to Cart';
+                                    btn.style.marginTop = '10px';
+                                    btn.style.width = '100%';
+                                    btn.style.padding = '8px';
+                                    btn.style.background = '#ff9f00';
+                                    btn.style.border = 'none';
+                                    btn.style.color = 'white';
+                                    btn.style.fontWeight = '500';
+                                    btn.style.cursor = 'pointer';
+                                    btn.onclick = (e) => {
+                                        e.stopPropagation();
+                                        addToCart(product.id);
+                                    };
+                                    card.appendChild(btn);
+
+                                    container.appendChild(card);
+                                });
+                            }
+
+                            async function addToCart(productId) {
+                                const user = JSON.parse(localStorage.getItem('user'));
+                                if (!user) {
+                                    alert("Please login to add items to cart");
+                                    window.location.href = 'login.html';
+                                    return;
+                                }
+
+                                try {
+                                    const response = await fetch('http://localhost:3000/api/cart', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            user_id: user.id,
+                                            product_id: productId,
+                                            quantity: 1
+                                        })
+                                    });
+
+                                    if (response.ok) {
+                                        alert("Item added to cart!");
+                                    } else {
+                                        alert("Failed to add item to cart");
+                                    }
+                                } catch (error) {
+                                    console.error('Error adding to cart:', error);
+                                }
+                            }
+                        </script>
+                    </body>
+
+</html>
