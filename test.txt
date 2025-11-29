@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Online Shopping App</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f4f4f4; }
+        header { background: #333; color: #fff; padding: 15px; text-align: center; }
+        .container { width: 90%; margin: auto; }
+        .products { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        .card {
+            background: white; width: 250px; padding: 10px; border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2); text-align: center;
+        }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        button {
+            padding: 8px 15px; border: none; background: #333;
+            color: white; margin: 5px; cursor: pointer; border-radius: 5px;
+        }
+        #cart-box {
+            background: white; padding: 15px; margin-top: 25px;
+            border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        #cart-items p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Simple Online Shopping App</h1>
+</header>
+<div class="container">
+    <h2>Products</h2>
+    <div class="products">
+        <!-- Product 1 -->
+        <div class="card">
+            <img src="https://via.placeholder.com/250" alt="Product">
+            <h3>Smart Watch</h3>
+            <p>Price: ₹999</p>
+            <button onclick="viewDetails('Smart Watch', 999)">View</button>
+            <button onclick="addToCart('Smart Watch', 999)">Add to Cart</button>
+        </div>
+        <!-- Product 2 -->
+        <div class="card">
+            <img src="https://via.placeholder.com/250" alt="Product">
+            <h3>Bluetooth Speaker</h3>
+            <p>Price: ₹799</p>
+            <button onclick="viewDetails('Bluetooth Speaker', 799)">View</button>
+            <button onclick="addToCart('Bluetooth Speaker', 799)">Add to Cart</button>
+        </div>
+        <!-- Product 3 -->
+        <div class="card">
+            <img src="https://via.placeholder.com/250" alt="Product">
+            <h3>School Bag</h3>
+            <p>Price: ₹499</p>
+            <button onclick="viewDetails('School Bag', 499)">View</button>
+            <button onclick="addToCart('School Bag', 499)">Add to Cart</button>
+        </div>
+    </div>
+    <!-- Product Details -->
+    <div id="details"
+         style="display:none; background:white; padding:15px; margin-top:20px; border-radius:8px;">
+        <h2>Product Details</h2>
+        <p id="detail-name"></p>
+        <p id="detail-price"></p>
+        <button onclick="closeDetails()">Close</button>
+    </div>
+    <!-- Cart -->
+    <div id="cart-box">
+        <h2>My Cart</h2>
+        <div id="cart-items"></div>
+        <h3 id="total">Total: ₹0</h3>
+        <button onclick="buyNow()">Buy Now</button>
+    </div>
+</div>
+<script>
+    let total = 0;
+    function addToCart(name, price) {
+        let cart = document.getElementById("cart-items");
+        let item = document.createElement("p");
+        item.textContent = name + " - ₹" + price;
+        cart.appendChild(item);
+        total += price;
+        document.getElementById("total").innerText = "Total: ₹" + total;
+    }
+    function viewDetails(name, price) {
+        document.getElementById("details").style.display = "block";
+        document.getElementById("detail-name").innerText = "Name: " + name;
+        document.getElementById("detail-price").innerText = "Price: ₹" + price;
+    }
+    function closeDetails() {
+        document.getElementById("details").style.display = "none";
+    }
+    function buyNow() {
+        if (total === 0) {
+            alert("Your cart is empty!");
+        } else {
+            alert("Order placed successfully!\nTotal Amount: ₹" + total);
+        }
+    }
+</script>
+</body>
+</html>
