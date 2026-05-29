@@ -67,11 +67,17 @@ export async function removeFromCartApi(cartItemId) {
   return data;
 }
 
-export async function updateProfileApi(userId, address, contactNumber) {
+export async function updateProfileApi(userId, { name, address, contactNumber, location, profilePicture }) {
   const response = await fetch(`${BASE_URL}/users/${userId}/profile`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ address, contact_number: contactNumber }),
+    body: JSON.stringify({ 
+      name, 
+      address, 
+      contact_number: contactNumber,
+      location,
+      profile_picture: profilePicture
+    }),
   });
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Failed to update profile');

@@ -44,6 +44,8 @@ async function setupDatabase() {
                 role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('customer', 'seller')),
                 address TEXT,
                 contact_number VARCHAR(20),
+                location TEXT,
+                profile_picture TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);

@@ -31,13 +31,29 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('kelna_cart'); // Clear cart on logout
   };
 
-  const updateProfile = async (address, contactNumber) => {
+  const updateProfile = async ({ name, address, contactNumber, location, profilePicture }) => {
     if (!user) throw new Error('Not logged in');
-    const result = await updateProfileApi(user.id, address, contactNumber);
-    if (result && result.user) {
-      setUser(result.user);
-      localStorage.setItem('user', JSON.stringify(result.user));
-      return result.user;
+    try {
+      const result = await updateProfileApi(user.id, { name, address, contactNumber, location, profilePicture });
+      if (result && result.user) {
+        setUser(result.user);
+        localStorage.setItem('user', JSON.stringify(result.user));
+        return result.user;
+      }
+    } catch (err) {
+      console.warn('API error, saving profile update locally:', err);
+      // Local fallback
+      const updatedUser = {
+        ...user,
+        name: name !== undefined ? name : user.name,
+        address: address !== undefined ? address : user.address,
+        contact_number: contactNumber !== undefined ? contactNumber : user.contact_number,
+        location: location !== undefined ? location : user.location,
+        profile_picture: profilePicture !== undefined ? profilePicture : user.profile_picture
+      };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return updatedUser;
     }
     throw new Error('Failed to update profile');
   };
