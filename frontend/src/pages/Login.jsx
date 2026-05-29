@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginApi } from '../services/api';
-import { Mail, Lock, UserCheck } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 
 export default function Login() {
   const { login } = useAuth();
@@ -36,47 +36,49 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center px-4 py-12">
-      <div className="glass-card bg-white/95 backdrop-blur-xl max-w-md w-full p-10 shadow-2xl hover:transform-none">
+    <div className="min-h-screen flex justify-center items-center px-4 py-12 pt-28">
+      <div className="glass-card max-w-md w-full p-10 border border-[var(--border-color)]">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-serif font-medium mb-2">
             Welcome Back
           </h1>
-          <p className="text-sm text-gray-500 mt-2">Login to access your MEGZO account</p>
+          <p className="text-xs text-[var(--text-muted)] tracking-wider uppercase">Login to your MEGZO account</p>
         </div>
 
         {/* Role Selector */}
-        <div className="flex gap-3 bg-gray-100/80 p-1.5 rounded-2xl mb-8 border border-gray-200">
+        <div className="flex gap-0 border border-[var(--border-color)] mb-8">
           <button
             type="button"
             onClick={() => setRole('customer')}
-            className={`flex-1 py-3 text-sm font-bold rounded-xl transition duration-300 ${
+            className={`flex-1 py-3 text-xs font-semibold tracking-wider uppercase transition duration-200 ${
               role === 'customer'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                : 'text-gray-600 hover:bg-gray-200/50'
+                ? 'bg-[var(--text-primary)] text-[var(--bg-color)]'
+                : 'text-[var(--text-primary)] hover:bg-[var(--accent-bg-light)]'
             }`}
+            style={{ borderRadius: '0px' }}
           >
             Customer
           </button>
           <button
             type="button"
             onClick={() => setRole('seller')}
-            className={`flex-1 py-3 text-sm font-bold rounded-xl transition duration-300 ${
+            className={`flex-1 py-3 text-xs font-semibold tracking-wider uppercase transition duration-200 ${
               role === 'seller'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                : 'text-gray-600 hover:bg-gray-200/50'
+                ? 'bg-[var(--text-primary)] text-[var(--bg-color)]'
+                : 'text-[var(--text-primary)] hover:bg-[var(--accent-bg-light)]'
             }`}
+            style={{ borderRadius: '0px' }}
           >
             Seller
           </button>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
-              <Mail className="w-4 h-4 text-gray-500" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5" />
               Email Address
             </label>
             <input
@@ -89,9 +91,9 @@ export default function Login() {
             />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
-              <Lock className="w-4 h-4 text-gray-500" />
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5" />
               Password
             </label>
             <input
@@ -105,13 +107,13 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 text-sm font-bold text-center p-3 rounded-xl border border-red-100">
+            <div className="bg-red-50 dark:bg-red-950/20 text-[var(--error-color)] text-xs font-semibold p-3 border border-[var(--error-color)]/25">
               {error}
             </div>
           )}
 
-          <div className="flex justify-end text-sm">
-            <a href="#" className="text-blue-600 font-bold hover:underline">
+          <div className="flex justify-end text-xs">
+            <a href="#" className="text-[var(--text-secondary)] font-semibold hover:underline">
               Forgot Password?
             </a>
           </div>
@@ -119,14 +121,14 @@ export default function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="btn-custom py-3.5 mt-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 hover:from-blue-700 hover:to-indigo-700"
+            className="btn-custom py-3.5 mt-2 text-xs tracking-wider uppercase font-semibold"
           >
             {submitting ? 'Logging in...' : 'Login'}
           </button>
 
-          <div className="text-center text-sm text-gray-600 mt-4">
+          <div className="text-center text-xs text-[var(--text-muted)] tracking-wider uppercase mt-4">
             New to Megzo?{' '}
-            <Link to="/signup" className="text-blue-600 font-bold hover:underline">
+            <Link to="/signup" className="text-[var(--text-secondary)] font-bold hover:underline">
               Create an account
             </Link>
           </div>

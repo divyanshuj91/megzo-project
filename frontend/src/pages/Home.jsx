@@ -29,38 +29,34 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="pt-24 pb-12 px-4 container mx-auto fade-in">
+    <main className="pt-24 pb-12 px-6 container mx-auto fade-in">
       {/* Hero Section */}
       <section className="mb-16">
-        <div className="glass-card rounded-[2.5rem] p-12 text-center max-w-4xl mx-auto relative overflow-hidden flex flex-col items-center justify-center">
+        <div className="glass-card p-12 text-center max-w-4xl mx-auto relative overflow-hidden flex flex-col items-center justify-center border-t-2 border-t-[var(--accent-color)]">
           <div className="relative z-10 max-w-2xl">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-              Big Savings on <span className="text-blue-600 drop-shadow-sm">Electronics</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium mb-6 leading-tight">
+              Big Savings on <span className="text-[var(--accent-color)] italic">Electronics</span>
             </h2>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+            <p className="text-base md:text-lg opacity-80 mb-8 leading-relaxed">
               Get the best deals on the latest smartphones, laptops, and accessories with our premium collection.
             </p>
             <button 
-              className="btn-custom text-lg px-10 py-4" 
+              className="btn-custom text-base px-8 py-3.5" 
               onClick={() => navigate('/products')}
             >
               Shop Now
             </button>
           </div>
-
-          {/* Decorative Circles */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-red-400/20 rounded-full blur-3xl pointer-events-none"></div>
         </div>
       </section>
 
       {/* Featured Section */}
       <section className="mb-12">
         <div className="flex justify-between items-end mb-8 px-2">
-          <h2 className="text-3xl font-extrabold text-white drop-shadow-md">Best of Electronics</h2>
+          <h2 className="text-3xl font-serif font-medium">Best of Electronics</h2>
           <button 
             onClick={() => navigate('/products')}
-            className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-6 py-2.5 rounded-xl font-bold transition border border-white/20 hover:scale-105"
+            className="border border-[var(--border-color)] hover:bg-[var(--accent-bg-light)] hover:border-[var(--accent-color)] text-[var(--text-primary)] px-6 py-2 font-medium transition duration-200"
           >
             View All
           </button>
@@ -72,15 +68,15 @@ export default function Home() {
             <div
               key={p.id || index}
               onClick={() => navigate('/products')}
-              className="glass-card rounded-2xl p-5 flex flex-col h-full bg-white/40 cursor-pointer group"
+              className="glass-card p-5 flex flex-col h-full cursor-pointer group"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Image Frame */}
-              <div className="aspect-square w-full overflow-hidden rounded-xl bg-white/50 mb-5 relative">
+              <div className="aspect-square w-full overflow-hidden bg-[var(--bg-color)] mb-5 relative border border-[var(--border-color)] flex items-center justify-center">
                 <img
                   src={p.image || p.image_url}
                   alt={p.name || p.title}
-                  className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-110"
+                  className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/300?text=No+Image';
                   }}
@@ -89,10 +85,10 @@ export default function Home() {
 
               {/* Product Info */}
               <div className="flex-grow flex flex-col justify-between">
-                <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition">
+                <h3 className="text-base font-semibold leading-tight group-hover:text-[var(--accent-color)] transition">
                   {p.name || p.title}
                 </h3>
-                <p className="mt-3 text-2xl font-black text-gray-900">
+                <p className="mt-3 text-xl font-bold">
                   ₹{parseFloat(p.price).toLocaleString()}
                 </p>
               </div>

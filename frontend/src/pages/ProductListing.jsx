@@ -45,7 +45,7 @@ export default function ProductListing() {
           const normalized = dbProducts.map(p => ({
             id: p.id,
             name: p.title || p.name,
-            category: p.category_name || 'Electronics', // Default if category name not joined
+            category: p.category_name || 'Electronics',
             price: parseFloat(p.price),
             image: p.image_url || p.image
           }));
@@ -57,7 +57,6 @@ export default function ProductListing() {
         }
       } catch (err) {
         console.warn('API connection failed, falling back to mock data:', err);
-        // Fallback categories list
         const uniqueCats = [...new Set(FALLBACK_PRODUCTS.map(p => p.category))];
         setCategories(uniqueCats);
       }
@@ -96,16 +95,18 @@ export default function ProductListing() {
   };
 
   const handleBuyNow = (product) => {
+    addToCart(product);
     alert(`Proceeding to checkout for: ${product.name}`);
   };
 
   return (
-    <div className="flex pt-24 min-h-screen container mx-auto px-4 relative">
+    <div className="flex pt-24 min-h-screen container mx-auto px-6 relative">
       
       {/* Mobile Toggle Button */}
       <button 
         onClick={() => setIsSidebarOpen(true)}
-        className="lg:hidden fixed bottom-6 right-6 z-40 bg-yellow-400 hover:bg-yellow-500 text-black font-bold p-4 rounded-full shadow-2xl flex items-center justify-center transition hover:scale-105 active:scale-95"
+        className="lg:hidden fixed bottom-6 right-6 z-40 bg-[var(--text-primary)] text-[var(--bg-color)] p-4 flex items-center justify-center border border-[var(--border-color)]"
+        style={{ borderRadius: '0px' }}
       >
         <SlidersHorizontal className="w-6 h-6" />
       </button>
@@ -114,14 +115,14 @@ export default function ProductListing() {
       <aside 
         className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:block transition-transform duration-300 ease-in-out glass-sidebar h-full overflow-y-auto lg:h-auto lg:overflow-visible lg:bg-transparent lg:border-none lg:shadow-none p-6 lg:p-0 lg:mr-8 rounded-2xl`}
+        } lg:translate-x-0 lg:static lg:block transition-transform duration-300 ease-in-out glass-sidebar h-full overflow-y-auto lg:h-auto lg:overflow-visible lg:bg-transparent lg:border-none lg:shadow-none p-6 lg:p-0 lg:mr-8`}
       >
         {/* Mobile Header for Sidebar */}
         <div className="flex justify-between items-center lg:hidden mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Filters</h2>
+          <h2 className="text-xl font-serif font-medium">Filters</h2>
           <button 
             onClick={() => setIsSidebarOpen(false)} 
-            className="text-gray-600 hover:text-red-500 transition p-1"
+            className="text-[var(--text-muted)] hover:text-red-500 transition p-1"
           >
             <X className="w-6 h-6" />
           </button>
@@ -129,13 +130,13 @@ export default function ProductListing() {
 
         {/* Sort Option */}
         <div className="mb-8">
-          <h3 className="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2 text-sm uppercase tracking-wider">
+          <h3 className="font-semibold text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-3 border-b border-[var(--border-color)] pb-2">
             Sort By
           </h3>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full bg-white/50 border border-gray-300 rounded-xl p-3 focus:outline-none focus:border-blue-500 text-sm font-semibold shadow-sm transition"
+            className="w-full bg-[var(--surface-color)] border border-[var(--border-color)] p-3 focus:outline-none focus:border-[var(--accent-color)] text-sm font-medium transition"
           >
             <option value="default">Default</option>
             <option value="price-low">Price: Low to High</option>
@@ -145,19 +146,20 @@ export default function ProductListing() {
 
         {/* Categories */}
         <div className="mb-8">
-          <h3 className="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2 text-sm uppercase tracking-wider">
+          <h3 className="font-semibold text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-3 border-b border-[var(--border-color)] pb-2">
             Categories
           </h3>
           <div className="flex flex-col gap-2.5">
             {categories.map((cat, idx) => (
-              <label key={idx} className="flex items-center space-x-2.5 cursor-pointer group">
+              <label key={idx} className="flex items-center space-x-2.5 cursor-pointer group text-sm">
                 <input 
                   type="checkbox" 
                   checked={selectedCategories.includes(cat)}
                   onChange={() => handleCategoryChange(cat)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4.5 w-4.5 transition cursor-pointer"
+                  className="border-[var(--border-color)] text-[var(--accent-color)] focus:ring-[var(--accent-color)] h-4 w-4 transition cursor-pointer"
+                  style={{ borderRadius: '0px' }}
                 />
-                <span className="text-gray-800 text-sm font-medium group-hover:text-blue-600 transition">
+                <span className="text-[var(--text-primary)] group-hover:text-[var(--accent-color)] transition">
                   {cat}
                 </span>
               </label>
@@ -167,7 +169,7 @@ export default function ProductListing() {
 
         {/* Price Range */}
         <div className="mb-8">
-          <h3 className="font-bold text-gray-900 mb-3 border-b border-gray-400/30 pb-2 text-sm uppercase tracking-wider">
+          <h3 className="font-semibold text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-3 border-b border-[var(--border-color)] pb-2">
             Price Range
           </h3>
           <input 
@@ -177,11 +179,11 @@ export default function ProductListing() {
             step="500" 
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="w-full h-1 bg-[var(--border-color)] appearance-none cursor-pointer accent-[var(--accent-color)]"
           />
-          <div className="flex justify-between text-sm font-bold mt-3 text-gray-800">
+          <div className="flex justify-between text-xs font-semibold mt-3">
             <span>₹0</span>
-            <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-md">
+            <span className="bg-[var(--accent-bg-light)] text-[var(--accent-text-light)] px-2 py-0.5 font-bold">
               ₹{maxPrice.toLocaleString()}
             </span>
           </div>
@@ -190,7 +192,7 @@ export default function ProductListing() {
         {/* Reset Button */}
         <button 
           onClick={handleReset} 
-          className="w-full py-3 bg-white/60 hover:bg-white text-gray-800 rounded-xl font-bold transition shadow-sm border border-gray-200"
+          className="w-full py-3 border border-[var(--border-color)] bg-transparent hover:bg-[var(--accent-bg-light)] hover:border-[var(--accent-color)] text-xs font-semibold tracking-wider uppercase transition duration-200"
         >
           Reset Filters
         </button>
@@ -207,18 +209,18 @@ export default function ProductListing() {
       {/* Main Product Grid */}
       <main className="flex-1 pb-10 fade-in">
         <div className="flex justify-between items-center mb-6 px-1">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white drop-shadow-md">
+          <h1 className="text-2xl md:text-3xl font-serif font-medium">
             Our Products
           </h1>
-          <span className="text-white font-bold text-xs bg-black/20 px-3.5 py-1.5 rounded-full backdrop-blur-sm border border-white/10 shadow-sm">
+          <span className="text-xs border border-[var(--border-color)] px-3 py-1.5 text-[var(--text-muted)] font-medium tracking-wider uppercase">
             {searchQuery ? `Search for "${searchQuery}": ` : ''}Showing {sortedProducts.length} items
           </span>
         </div>
         
         {sortedProducts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-white py-24 glass-card p-12 text-center max-w-lg mx-auto mt-6">
-            <p className="text-2xl font-black mb-2">No products found</p>
-            <p className="opacity-80 font-medium">Try adjusting your filter options or search keyword.</p>
+          <div className="flex flex-col items-center justify-center py-24 glass-card p-12 text-center max-w-lg mx-auto mt-6">
+            <p className="text-xl font-serif font-medium mb-2">No products found</p>
+            <p className="opacity-80 text-sm">Try adjusting your filter options or search keyword.</p>
             <button 
               onClick={handleReset}
               className="btn-custom mt-6"
@@ -231,47 +233,47 @@ export default function ProductListing() {
             {sortedProducts.map((product, idx) => (
               <div 
                 key={product.id || idx}
-                className="glass-card rounded-2xl p-4 flex flex-col h-full bg-white/40 group"
+                className="glass-card p-4 flex flex-col h-full group"
               >
                 {/* Image & Tag */}
-                <div className="aspect-square w-full overflow-hidden rounded-xl bg-white/50 mb-4 relative flex items-center justify-center">
+                <div className="aspect-square w-full overflow-hidden bg-[var(--bg-color)] mb-4 relative flex items-center justify-center border border-[var(--border-color)]">
                   <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-115"
+                    className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/300?text=No+Image';
                     }}
                   />
-                  <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-lg px-2.5 py-1 text-[11px] font-extrabold shadow-sm text-gray-800 tracking-wider uppercase border border-gray-100">
+                  <div className="absolute top-2 right-2 bg-[var(--surface-color)] border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase text-[var(--text-secondary)]">
                     {product.category}
                   </div>
                 </div>
                 
                 {/* Details */}
                 <div className="flex-grow flex flex-col justify-between mb-4">
-                  <h3 className="text-base font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition">
+                  <h3 className="text-sm font-semibold leading-tight group-hover:text-[var(--accent-color)] transition">
                     {product.name}
                   </h3>
-                  <p className="mt-2 text-xl font-black text-gray-900">
+                  <p className="mt-2 text-lg font-bold">
                     ₹{product.price.toLocaleString()}
                   </p>
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="pt-3 border-t border-gray-200/50 flex flex-col gap-2">
+                <div className="pt-3 border-t border-[var(--border-color)] flex flex-col gap-2">
                   <button 
                     onClick={() => {
                       addToCart(product);
                       alert(`${product.name} added to cart!`);
                     }}
-                    className="btn-custom w-full py-2.5 text-sm"
+                    className="btn-custom w-full py-2.5 text-xs tracking-wider uppercase font-semibold"
                   >
                     Add to Cart
                   </button>
                   <button 
                     onClick={() => handleBuyNow(product)}
-                    className="btn-custom w-full py-2.5 text-sm btn-custom-blue"
+                    className="btn-custom w-full py-2.5 text-xs tracking-wider uppercase font-semibold btn-custom-blue"
                   >
                     Buy Now
                   </button>

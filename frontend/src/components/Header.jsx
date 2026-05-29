@@ -37,22 +37,22 @@ export default function Header({ onOpenProfile }) {
         <div className="flex items-center gap-4 shrink-0">
           <span 
             onClick={() => navigate('/')} 
-            className="text-2xl font-extrabold text-gray-900 tracking-tight cursor-pointer hover:opacity-80 transition"
+            className="text-2xl font-extrabold text-[var(--text-primary)] tracking-tight cursor-pointer hover:opacity-80 transition"
           >
             MEGZO
           </span>
         </div>
 
         {/* Global Search Bar */}
-        <div className="flex-1 max-w-xl mx-2 md:mx-8 bg-white/40 rounded-xl px-4 py-2 border border-white/30 focus-within:bg-white/60 focus-within:border-blue-500/50 transition-all flex items-center shadow-inner">
+        <div className="flex-1 max-w-xl mx-2 md:mx-8 bg-[var(--bg-color)] border border-[var(--border-color)] px-4 py-2 focus-within:border-[var(--accent-color)] transition-all flex items-center shadow-inner">
           <input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="bg-transparent outline-none w-full placeholder-gray-600 text-gray-900 text-sm md:text-base border-none"
+            className="bg-transparent outline-none w-full placeholder-[var(--text-muted)] text-[var(--text-primary)] text-sm md:text-base border-none"
           />
-          <Search className="w-5 h-5 text-gray-700 ml-2" />
+          <Search className="w-5 h-5 text-[var(--text-muted)] ml-2" />
         </div>
 
         {/* Navigation & Controls */}
@@ -61,7 +61,7 @@ export default function Header({ onOpenProfile }) {
             {/* Products link */}
             <span 
               onClick={() => navigate('/products')} 
-              className="text-gray-800 font-semibold cursor-pointer hover:text-blue-600 transition text-sm md:text-base hidden sm:inline"
+              className="text-[var(--text-primary)] hover:text-[var(--accent-color)] font-semibold cursor-pointer transition text-sm md:text-base hidden sm:inline"
             >
               Shop
             </span>
@@ -69,7 +69,7 @@ export default function Header({ onOpenProfile }) {
             {/* Theme Toggle Button */}
             <button 
               onClick={toggleTheme}
-              className="text-gray-800 hover:text-blue-600 transition p-1 cursor-pointer"
+              className="text-[var(--text-primary)] hover:text-[var(--accent-color)] transition p-1 cursor-pointer"
               title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
             >
               {theme === 'light' ? <Moon className="w-5.5 h-5.5" /> : <Sun className="w-5.5 h-5.5 text-yellow-500" />}
@@ -81,7 +81,7 @@ export default function Header({ onOpenProfile }) {
               className="relative cursor-pointer hover:scale-105 transition p-1"
             >
 
-              <ShoppingCart className="w-6 h-6 text-gray-800" />
+              <ShoppingCart className="w-6 h-6 text-[var(--text-primary)]" />
               {cart.length > 0 && (
                 <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-pulse">
                   {cart.length}
@@ -93,10 +93,19 @@ export default function Header({ onOpenProfile }) {
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
                 <button 
-                  onClick={onOpenProfile}
-                  className="flex items-center gap-1.5 text-gray-800 font-semibold hover:text-blue-600 transition text-sm md:text-base"
+                  onClick={() => navigate('/profile')}
+                  className="flex items-center gap-2 font-semibold text-[var(--text-primary)] hover:text-[var(--accent-color)] transition text-sm md:text-base"
                 >
-                  <User className="w-5 h-5" />
+                  {user && user.profile_picture ? (
+                    <img 
+                      src={user.profile_picture} 
+                      alt={user.name} 
+                      className="w-6 h-6 object-cover border border-[var(--border-color)]"
+                      style={{ borderRadius: '50%' }}
+                    />
+                  ) : (
+                    <User className="w-5 h-5" />
+                  )}
                   <span className="hidden md:inline">Profile</span>
                 </button>
                 <button 
@@ -113,7 +122,7 @@ export default function Header({ onOpenProfile }) {
             ) : (
               <button 
                 onClick={() => navigate('/login')}
-                className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition shadow-md text-sm"
+                className="btn-custom py-2 px-4 text-xs font-bold tracking-wider uppercase"
               >
                 Login
               </button>
