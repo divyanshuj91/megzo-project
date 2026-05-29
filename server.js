@@ -1,8 +1,9 @@
 const express = require('express');
-const mysql = require('mysql2');
+const { Pool } = require('pg');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const path = require('path');
 
 const app = express();
 const PORT = 3000;
@@ -10,23 +11,27 @@ const PORT = 3000;
 // Middleware
 app.use(cors()); // Allow frontend to communicate with backend
 app.use(bodyParser.json()); // Parse JSON bodies
-app.use(express.static('.')); // Serve static files from root
 
-// Database Connection
-// NOTE: Replace these values with your actual MySQL database credentials
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',      // Default XAMPP/MySQL user
-    password: 'root1234',      // Default XAMPP password is empty
-    database: 'magikart'
+// Serve static files from React production build
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
+
+
+// PostgreSQL Database Connection Pool
+const db = new Pool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'root1234',
+    database: process.env.DB_DATABASE || 'magikart',
+    port: parseInt(process.env.DB_PORT || '5432', 10)
 });
 
-db.connect((err) => {
+db.connect((err, client, release) => {
     if (err) {
         console.error('Error connecting to database:', err);
         return;
     }
-    console.log('Connected to MySQL database');
+    console.log('Connected to PostgreSQL database');
+    release();
 });
 
 // --- ROUTES ---
@@ -41,11 +46,11 @@ app.post('/api/register', async (req, res) => {
 
     try {
         // Check if user already exists
-        const checkQuery = 'SELECT * FROM users WHERE email = ?';
-        db.query(checkQuery, [email], async (err, results) => {
+        const checkQuery = 'SELECT * FROM users WHERE email = $1';
+        db.query(checkQuery, [email], async (err, dbRes) => {
             if (err) return res.status(500).json({ error: err.message });
 
-            if (results.length > 0) {
+            if (dbRes.rows.length > 0) {
                 return res.status(409).json({ message: 'Email already registered' });
             }
 
@@ -54,8 +59,8 @@ app.post('/api/register', async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, saltRounds);
 
             // Insert new user
-            const insertQuery = 'INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)';
-            db.query(insertQuery, [fullname, email, hashedPassword, role], (err, result) => {
+            const insertQuery = 'INSERT INTO users (full_name, email, password, role) VALUES ($1, $2, $3, $4)';
+            db.query(insertQuery, [fullname, email, hashedPassword, role], (err, dbRes2) => {
                 if (err) return res.status(500).json({ error: err.message });
 
                 res.status(201).json({ message: 'User registered successfully' });
@@ -74,15 +79,15 @@ app.post('/api/login', (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.query(query, [email], async (err, results) => {
+    const query = 'SELECT * FROM users WHERE email = $1';
+    db.query(query, [email], async (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        if (results.length === 0) {
+        if (dbRes.rows.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const user = results[0];
+        const user = dbRes.rows[0];
 
         // Verify Password
         const match = await bcrypt.compare(password, user.password);
@@ -113,9 +118,9 @@ app.post('/api/login', (req, res) => {
 
 // 3. Get Categories
 app.get('/api/categories', (req, res) => {
-    db.query('SELECT * FROM categories', (err, results) => {
+    db.query('SELECT * FROM categories', (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+        res.json(dbRes.rows);
     });
 });
 
@@ -126,23 +131,23 @@ app.get('/api/products', (req, res) => {
     let params = [];
 
     if (category_id) {
-        query += ' WHERE category_id = ?';
+        query += ' WHERE category_id = $1';
         params.push(category_id);
     }
 
-    db.query(query, params, (err, results) => {
+    db.query(query, params, (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+        res.json(dbRes.rows);
     });
 });
 
 // 5. Get Single Product
 app.get('/api/products/:id', (req, res) => {
     const { id } = req.params;
-    db.query('SELECT * FROM products WHERE id = ?', [id], (err, results) => {
+    db.query('SELECT * FROM products WHERE id = $1', [id], (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0) return res.status(404).json({ message: 'Product not found' });
-        res.json(results[0]);
+        if (dbRes.rows.length === 0) return res.status(404).json({ message: 'Product not found' });
+        res.json(dbRes.rows[0]);
     });
 });
 
@@ -155,11 +160,11 @@ app.get('/api/cart', (req, res) => {
         SELECT c.id, c.quantity, p.* 
         FROM cart_items c
         JOIN products p ON c.product_id = p.id
-        WHERE c.user_id = ?
+        WHERE c.user_id = $1
     `;
-    db.query(query, [user_id], (err, results) => {
+    db.query(query, [user_id], (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+        res.json(dbRes.rows);
     });
 });
 
@@ -169,20 +174,20 @@ app.post('/api/cart', (req, res) => {
     if (!user_id || !product_id) return res.status(400).json({ message: 'User ID and Product ID required' });
 
     // Check if item exists
-    const checkQuery = 'SELECT * FROM cart_items WHERE user_id = ? AND product_id = ?';
-    db.query(checkQuery, [user_id, product_id], (err, results) => {
+    const checkQuery = 'SELECT * FROM cart_items WHERE user_id = $1 AND product_id = $2';
+    db.query(checkQuery, [user_id, product_id], (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        if (results.length > 0) {
+        if (dbRes.rows.length > 0) {
             // Update quantity
-            const newQuantity = results[0].quantity + (quantity || 1);
-            db.query('UPDATE cart_items SET quantity = ? WHERE id = ?', [newQuantity, results[0].id], (err) => {
+            const newQuantity = dbRes.rows[0].quantity + (quantity || 1);
+            db.query('UPDATE cart_items SET quantity = $1 WHERE id = $2', [newQuantity, dbRes.rows[0].id], (err) => {
                 if (err) return res.status(500).json({ error: err.message });
                 res.json({ message: 'Cart updated' });
             });
         } else {
             // Insert new item
-            db.query('INSERT INTO cart_items (user_id, product_id, quantity) VALUES (?, ?, ?)', [user_id, product_id, quantity || 1], (err) => {
+            db.query('INSERT INTO cart_items (user_id, product_id, quantity) VALUES ($1, $2, $3)', [user_id, product_id, quantity || 1], (err) => {
                 if (err) return res.status(500).json({ error: err.message });
                 res.json({ message: 'Added to cart' });
             });
@@ -193,7 +198,7 @@ app.post('/api/cart', (req, res) => {
 // 8. Remove from Cart
 app.delete('/api/cart/:id', (req, res) => {
     const { id } = req.params;
-    db.query('DELETE FROM cart_items WHERE id = ?', [id], (err) => {
+    db.query('DELETE FROM cart_items WHERE id = $1', [id], (err) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: 'Item removed from cart' });
     });
@@ -215,40 +220,48 @@ app.put('/api/users/:id/profile', (req, res) => {
 
     let updateFields = [];
     let params = [];
+    let paramIndex = 1;
 
     if (address !== undefined) {
-        updateFields.push('address = ?');
+        updateFields.push(`address = $${paramIndex++}`);
         params.push(address);
     }
 
     if (contact_number !== undefined) {
-        updateFields.push('contact_number = ?');
+        updateFields.push(`contact_number = $${paramIndex++}`);
         params.push(contact_number);
     }
 
     params.push(id);
 
-    const query = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
+    const query = `UPDATE users SET ${updateFields.join(', ')} WHERE id = $${paramIndex}`;
 
-    db.query(query, params, (err, result) => {
+    db.query(query, params, (err, dbRes) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        if (result.affectedRows === 0) {
+        if (dbRes.rowCount === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         // Fetch updated user data
-        db.query('SELECT id, full_name, email, role, address, contact_number FROM users WHERE id = ?', [id], (err, results) => {
+        db.query('SELECT id, full_name, email, role, address, contact_number FROM users WHERE id = $1', [id], (err, dbRes2) => {
             if (err) return res.status(500).json({ error: err.message });
             res.json({
                 message: 'Profile updated successfully',
-                user: results[0]
+                user: dbRes2.rows[0]
             });
         });
     });
 });
 
+// Catch-all route to serve React SPA index.html for non-API requests
+app.get('*all', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+});
+
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
