@@ -2,11 +2,13 @@ import React from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart, User, LogOut, Search } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { ShoppingCart, User, LogOut, Search, Sun, Moon } from 'lucide-react';
 
 export default function Header({ onOpenProfile }) {
   const { user, logout, isAuthenticated } = useAuth();
   const { cart } = useCart();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,11 +66,21 @@ export default function Header({ onOpenProfile }) {
               Shop
             </span>
 
+            {/* Theme Toggle Button */}
+            <button 
+              onClick={toggleTheme}
+              className="text-gray-800 hover:text-blue-600 transition p-1 cursor-pointer"
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+              {theme === 'light' ? <Moon className="w-5.5 h-5.5" /> : <Sun className="w-5.5 h-5.5 text-yellow-500" />}
+            </button>
+
             {/* Cart Icon & Badge */}
             <div 
               onClick={() => navigate('/cart')} 
               className="relative cursor-pointer hover:scale-105 transition p-1"
             >
+
               <ShoppingCart className="w-6 h-6 text-gray-800" />
               {cart.length > 0 && (
                 <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center animate-pulse">
