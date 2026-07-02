@@ -58,6 +58,16 @@ export default function Header({ onOpenProfile }) {
         {/* Navigation & Controls */}
         <div className="flex items-center gap-4 shrink-0">
           <nav className="flex items-center gap-6">
+            {/* Seller dashboard (only visible if logged in user is a seller) */}
+            {isAuthenticated && user?.role === 'seller' && (
+              <span 
+                onClick={() => navigate('/seller-dashboard')} 
+                className="text-[var(--text-primary)] hover:text-[var(--accent-color)] font-bold cursor-pointer transition text-xs border border-[var(--accent-color)]/45 px-3 py-1 bg-[var(--accent-bg-light)] text-[var(--text-primary)] uppercase tracking-wider hidden sm:inline"
+              >
+                Seller Hub
+              </span>
+            )}
+
             {/* Products link */}
             <span 
               onClick={() => navigate('/products')} 
