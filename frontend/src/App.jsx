@@ -10,6 +10,7 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProfileDashboard from './pages/ProfileDashboard';
+import SellerDashboard from './pages/SellerDashboard';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<ProfileDashboard />} />
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
         </Routes>
       </div>
 

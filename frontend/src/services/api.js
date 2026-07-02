@@ -83,3 +83,40 @@ export async function updateProfileApi(userId, { name, address, contactNumber, l
   if (!response.ok) throw new Error(data.message || 'Failed to update profile');
   return data;
 }
+
+export async function getSellerProductsApi(sellerId) {
+  const response = await fetch(`${BASE_URL}/seller/products?seller_id=${sellerId}`);
+  if (!response.ok) throw new Error('Failed to fetch seller products');
+  return response.json();
+}
+
+export async function createProductApi(productData) {
+  const response = await fetch(`${BASE_URL}/products`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(productData),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to create product');
+  return data;
+}
+
+export async function updateProductApi(productId, productData) {
+  const response = await fetch(`${BASE_URL}/products/${productId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(productData),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to update product');
+  return data;
+}
+
+export async function deleteProductApi(productId) {
+  const response = await fetch(`${BASE_URL}/products/${productId}`, {
+    method: 'DELETE',
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to delete product');
+  return data;
+}
